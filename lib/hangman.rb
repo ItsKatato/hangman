@@ -6,48 +6,62 @@ end
 
 # The class for the main board. Used to save board information
 class Board
-  attr_accessor :board_info
+  attr_accessor :board_info, :secr_word, :current_state, :health, :guessed_letter
 
   def initialize
     @board_info = {
-      current_state: [],
-      secr_word: '',
-      rem_turns: '',
+      secr_word: sel_word.split(''),
+      current_state: Array.new(:secr_word.length, '_'),
+      health: 6,
       guessed_letter: ''
     }
   end
-end
 
-# module with gameplay related methods
-module Gameplay
   def load_wordlist
     wordlist = File.readlines('google-10000-english-no-swears.txt')
     wordlist.select { |word| word.length.between?(5, 12) }
   end
 
+  def sel_word
+    load_wordlist.sample
+  end
+
   def hangman
-    gameboard = Board.new
-    gameboard.board_info[:secr_word] = load_wordlist.to_a
-    gameboard.board_info[:current_state] = Array.new(gameboard.board_info[:secr_word].length, '_')
-    6.times do
-      puts 'Guess a letter!'
+    loop do
+      puts "Hangman's Health: #{board_info[:health]}/6"
+      play_round
+      board_info[:health] -= 1 unless correct_guess?
+      break if board_info[:health].zero? || board_info[:secr_word] == board_info[:current_state]
+
+      print board_info[:current_state].join(' ')
     end
+    puts "The word was #{board_info[:secr_word].join}"
   end
 
   def play_round
-    puts 'Guess a letter!'
+    puts 'Guess a (1) letter!'
     loop do
-      gameboard.board_info[:guessed_letter] = gets.chomp
-      break unless gameboard.board_info[:guessed_letter] != 1 || /\D/.match?(gameboard.board_info[:guessed_letter])
+      board_info[:guessed_letter] = gets.chomp
+      board_info[:guessed_letter].downcase!
+      break unless board_info[:guessed_letter].length != 1 || /\d/.match?(board_info[:guessed_letter])
+
+      puts 'Guess only 1 letter! Try Again.'
     end
+    compare_guess
   end
 
   def compare_guess
-    gameboard.board_info[:secr_word].for_each_index do |i|
-      next unless gameboard.board_info[:secr_word][i] == gameboard.board_info[:guessed_letter]
+    board_info[:secr_word].each_index do |i|
+      next unless board_info[:secr_word][i] == board_info[:guessed_letter]
 
-      gameboard.board_info[:current_state][i] = gameboard.board_info[:guessed_letter]
+      board_info[:current_state][i] = board_info[:guessed_letter]
     end
   end
+
+  def correct_guess?
+    board_info[:current_state].include?(board_info[:guessed_letter])
+  end
 end
-gameplay
+
+gameboard = Board.new
+gameboard.hangman
