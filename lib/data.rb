@@ -29,15 +29,15 @@ module SaveData
       choice = gets.chomp
       break if %w[y n].include?(choice)
     end
-    case choice
-    when 'y'
-      true
-    when 'n'
-      false
-    end
+    choice == 'y'
+  end
+
+  def save?
+    File.exist?('saves/saved_game.json')
   end
 
   def game_start
+    sel_word unless save?
     if load_message?
       board_info.replace(load_save)
       puts "Incorrect Letters: #{board_info[:guess_list]}"

@@ -49,13 +49,12 @@ class Board
       board_info[:guessed_letter].downcase!
       break unless guess_invalid?
 
-      if board_info[:guessed_letter] == 'save'
+      case board_info[:guessed_letter]
+      when 'save'
         create_save
         puts 'Guess a (1) letter, type "save" to save the game, or type "exit" to end the game!'
         redo
-      end
-
-      if board_info[:guessed_letter] == 'exit'
+      when 'exit'
         puts 'Thanks for playing!'
         exit
       end
