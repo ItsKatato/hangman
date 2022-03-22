@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Methods related to saving the game
-module SaveData
+module LoadData
   def create_save
     Dir.mkdir('saves') unless Dir.exist?('saves')
     filename = 'saves/saved_game.json'
@@ -45,5 +45,15 @@ module SaveData
     else
       sel_word
     end
+  end
+
+  def load_wordlist
+    wordlist = File.readlines('google-10000-english-no-swears.txt')
+    wordlist.select { |word| word.length.between?(5, 12) }
+  end
+
+  def sel_word
+    board_info[:secr_word] = load_wordlist.sample.chomp.split('')
+    board_info[:current_state] = Array.new(board_info[:secr_word].length, '_')
   end
 end

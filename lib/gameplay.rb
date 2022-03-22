@@ -4,9 +4,9 @@ require_relative 'data'
 
 # The class for the main board. Used to save board information
 class Board
-  attr_accessor :board_info # , :secr_word, :current_state, :health, :guessed_letter
+  attr_accessor :board_info
 
-  include SaveData
+  include LoadData
 
   def initialize
     @board_info = {
@@ -16,16 +16,6 @@ class Board
       guessed_letter: '',
       guess_list: []
     }
-  end
-
-  def load_wordlist
-    wordlist = File.readlines('google-10000-english-no-swears.txt')
-    wordlist.select { |word| word.length.between?(5, 12) }
-  end
-
-  def sel_word
-    board_info[:secr_word] = load_wordlist.sample.chomp.split('')
-    board_info[:current_state] = Array.new(board_info[:secr_word].length, '_')
   end
 
   def hangman
@@ -49,19 +39,23 @@ class Board
       board_info[:guessed_letter].downcase!
       break unless guess_invalid?
 
-      case board_info[:guessed_letter]
-      when 'save'
-        create_save
-        puts 'Guess a (1) letter, type "save" to save the game, or type "exit" to end the game!'
-        redo
-      when 'exit'
-        puts 'Thanks for playing!'
-        exit
-      end
+      game_options
 
       puts 'Guess only 1 letter & don\'t repeat letters!'
     end
     compare_guess
+  end
+
+  def game_options
+    case board_info[:guessed_letter]
+    when 'save'
+      create_save
+      puts 'Guess a (1) letter, type "save" to save the game, or type "exit" to end the game!'
+      redo
+    when 'exit'
+      puts 'Thanks for playing!'
+      exit
+    end
   end
 
   def guess_invalid?
