@@ -19,7 +19,7 @@ class Board
   end
 
   # main gameplay method
-  def hangman
+  def gameplay
     loop do
       puts "Hangman's Health: #{board_info[:health]}/6"
       play_round
