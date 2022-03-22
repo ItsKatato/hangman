@@ -18,6 +18,7 @@ class Board
     }
   end
 
+  # main gameplay method
   def hangman
     loop do
       puts "Hangman's Health: #{board_info[:health]}/6"
@@ -32,6 +33,7 @@ class Board
     puts "The word was #{board_info[:secr_word].join}"
   end
 
+  # plays a single round of hangman
   def play_round
     puts 'Guess a (1) letter, type "save" to save the game, or type "exit" to end the game!'
     loop do
@@ -46,6 +48,7 @@ class Board
     compare_guess
   end
 
+  # User options to save or exit the game
   def game_options
     case board_info[:guessed_letter]
     when 'save'
@@ -58,6 +61,7 @@ class Board
     end
   end
 
+  # Checks if user entered a valid guess
   def guess_invalid?
     if board_info[:guessed_letter].length != 1
       true
@@ -70,12 +74,14 @@ class Board
     end
   end
 
+  # Updated incorrect guess list
   def update_guess_list
     return if board_info[:secr_word].include?(board_info[:guessed_letter])
 
     board_info[:guess_list].push(board_info[:guessed_letter])
   end
 
+  # Checks if guessed letter is in the secret wword
   def compare_guess
     board_info[:secr_word].each_index do |i|
       next unless board_info[:secr_word][i] == board_info[:guessed_letter]
@@ -84,6 +90,7 @@ class Board
     end
   end
 
+  # Checks if guess was correct
   def correct_guess?
     board_info[:current_state].include?(board_info[:guessed_letter])
   end
