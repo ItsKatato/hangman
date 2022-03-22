@@ -95,10 +95,11 @@ class Board
   end
 
   def win_test
+    p board_info[:current_state].join(' ')
     if board_info[:secr_word] == board_info[:current_state]
-      puts "You win! The word was #{board_info[:secr_word].join}"
+      puts "You win! The word was #{board_info[:secr_word].join}!"
     else
-      puts "You lose! The word was #{board_info[:secr_word].join}"
+      puts "You lose! The word was #{board_info[:secr_word].join}!"
     end
   end
 end
