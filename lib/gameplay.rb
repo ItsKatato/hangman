@@ -42,8 +42,6 @@ class Board
       break unless guess_invalid?
 
       game_options
-
-      puts 'Guess only 1 letter & don\'t repeat letters!'
     end
     compare_guess
   end
@@ -54,10 +52,11 @@ class Board
     when 'save'
       create_save
       puts 'Guess a (1) letter, type "save" to save the game, or type "exit" to end the game!'
-      redo
     when 'exit'
       puts 'Thanks for playing!'
       exit
+    else
+      puts 'Remember to guess only 1 letter & don\'t repeat letters!'
     end
   end
 

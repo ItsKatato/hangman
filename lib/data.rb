@@ -37,11 +37,14 @@ module LoadData
   end
 
   def game_start
-    sel_word unless save?
-    if load_message?
-      board_info.replace(load_save)
-      puts "Incorrect Letters: #{board_info[:guess_list]}"
-      p board_info[:current_state].join(' ')
+    if save?
+      if load_message?
+        board_info.replace(load_save)
+        puts "Incorrect Letters: #{board_info[:guess_list]}"
+        p board_info[:current_state].join(' ')
+      else
+        sel_word
+      end
     else
       sel_word
     end
